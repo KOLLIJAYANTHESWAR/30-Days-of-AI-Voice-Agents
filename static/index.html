@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day13 // Cognitive AI Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode Colors */
+            --light-bg: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --light-surface: rgba(255, 255, 255, 0.95);
+            --light-surface-elevated: rgba(255, 255, 255, 0.98);
+            --light-border: rgba(148, 163, 184, 0.2);
+            --light-text: #1e293b;
+            --light-text-muted: #64748b;
+            
+            /* Dark Mode Colors */
+            --dark-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --dark-surface: rgba(30, 41, 59, 0.95);
+            --dark-surface-elevated: rgba(51, 65, 85, 0.98);
+            --dark-border: rgba(71, 85, 105, 0.3);
+            --dark-text: #f1f5f9;
+            --dark-text-muted: #cbd5e1;
+            
+            /* Brand Colors */
+            --primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --primary-glow: rgba(59, 130, 246, 0.3);
+            --accent: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --accent-glow: rgba(16, 185, 129, 0.3);
+            --warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            
+            /* Effects */
+            --glass-blur: blur(20px);
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-large: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body { 
+            margin: 0; /* Fix for default browser margin */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            transition: var(--transition); 
+            overflow: hidden; 
+        }
+        body.light-mode { --bg: var(--light-bg); --surface: var(--light-surface); --surface-elevated: var(--light-surface-elevated); --border: var(--light-border); --text: var(--light-text); --text-muted: var(--light-text-muted); }
+        body.dark-mode { --bg: var(--dark-bg); --surface: var(--dark-surface); --surface-elevated: var(--dark-surface-elevated); --border: var(--dark-border); --text: var(--dark-text); --text-muted: var(--dark-text-muted); }
+
+        .main-wrapper { display: flex; height: 100vh; background: var(--bg); color: var(--text); position: relative; overflow: hidden; }
+        .main-wrapper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, var(--primary-glow) 0%, transparent 50%), radial-gradient(circle at 80% 20%, var(--accent-glow) 0%, transparent 50%); opacity: 0.3; pointer-events: none; z-index: 0; }
+        .sidebar { width: 420px; background: var(--surface); backdrop-filter: var(--glass-blur); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 1; box-shadow: var(--shadow-medium); }
+        .sidebar-header { padding: 2rem; border-bottom: 1px solid var(--border); background: var(--surface-elevated); }
+        .sidebar-header h2 { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.75rem; background: var(--primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0; letter-spacing: -0.025em; }
+        .chat-history { flex-grow: 1; overflow-y: auto; padding: 1.5rem; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+        .chat-history::-webkit-scrollbar { width: 6px; }
+        .chat-history::-webkit-scrollbar-track { background: transparent; }
+        .chat-history::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .chat-message { display: flex; gap: 1rem; margin-bottom: 2rem; opacity: 0; animation: fadeInUp 0.6s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .message-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--surface-elevated); border: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-soft); transition: var(--transition); }
+        .message-icon svg { width: 20px; height: 20px; color: var(--text-muted); }
+        .message-content h4 { font-weight: 600; font-size: 0.875rem; color: var(--text); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .message-text { line-height: 1.7; color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+        .sidebar-footer { padding: 2rem; border-top: 1px solid var(--border); background: var(--surface-elevated); }
+        .theme-switch-wrapper { display: flex; align-items: center; justify-content: center; gap: 1rem; color: var(--text-muted); font-size: 0.875rem; font-weight: 500; }
+        .theme-switch { position: relative; display: inline-block; width: 60px; height: 32px; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--border); transition: var(--transition); border-radius: 32px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); }
+        
+        .slider:before { position: absolute; content: ""; height: 24px; width: 24px; left: 4px; bottom: 4px; transition: var(--transition); border-radius: 50%; box-shadow: var(--shadow-soft); }
+        body.light-mode .slider:before { background-color: var(--light-surface-elevated); }
+        body.dark-mode .slider:before { background-color: var(--dark-surface-elevated); }
+
+        input:checked + .slider { background: var(--primary); }
+        input:checked + .slider:before { transform: translateX(28px); }
+        .interaction-panel { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem; position: relative; z-index: 1; }
+        .aura-orb { width: 280px; height: 280px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+        .aura-orb:hover { transform: scale(1.05); }
+        .orb-ring { position: absolute; border-radius: 50%; border: 2px solid; transition: var(--transition); }
+        
+        /* --- ADVANCED ANIMATION: Main Orb Ring --- */
+        .orb-ring-1 { width: 100%; height: 100%; border-color: var(--border); background: radial-gradient(circle, var(--surface) 0%, transparent 70%); backdrop-filter: var(--glass-blur); box-shadow: var(--shadow-large); animation: rotate 30s linear infinite; }
+        .orb-ring-2 { width: 75%; height: 75%; border-color: var(--primary-glow); opacity: 0.6; animation: rotate 20s linear infinite reverse; }
+        .orb-ring-3 { width: 50%; height: 50%; border-color: var(--accent-glow); opacity: 0.4; animation: rotate 25s linear infinite; }
+        
+        /* --- ADVANCED ANIMATION: Idle State Animation --- */
+        .aura-orb.idle .orb-ring { animation-duration: 15s; } /* Slower rotation when idle */
+        .aura-orb.idle .orb-ring-3 { animation: pulse-advanced 6s infinite ease-in-out, rotate 25s linear infinite; }
+        .aura-orb.idle .orb-ring-2 { animation: pulse-advanced 6s infinite ease-in-out 0.75s, rotate 20s linear infinite reverse; }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        @keyframes pulse-advanced {
+            0%, 100% { transform: scale(1); opacity: 0.4; filter: hue-rotate(0deg); }
+            50% { transform: scale(1.2); opacity: 0.8; filter: hue-rotate(45deg); }
+        }
+
+        /* --- ADVANCED ANIMATION: Recording State --- */
+        .aura-orb.recording .orb-ring-1 {
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 60px var(--accent-glow);
+            animation: recording-pulse 2s infinite ease-in-out, rotate 15s linear infinite;
+        }
+
+        .orb-icon { z-index: 10; display: flex; align-items: center; justify-content: center; color: var(--text); }
+        #waveformCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; opacity: 0.8; }
+        @media (max-width: 992px) { .sidebar { width: 350px; } .aura-orb { width: 220px; height: 220px; } }
+        @media (max-width: 768px) { .main-wrapper { flex-direction: column; } .sidebar { width: 100%; height: 50vh; border-right: none; border-bottom: 1px solid var(--border); } .interaction-panel { padding: 2rem 1rem; } .aura-orb { width: 180px; height: 180px; } }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="main-wrapper">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Cognitive Interface</h2>
+            </div>
+            <div id="chatHistory" class="chat-history"></div>
+            <div class="sidebar-footer">
+                <div class="theme-switch-wrapper">
+                    <span>Light</span>
+                    <label class="theme-switch"><input type="checkbox" id="themeToggle"><span class="slider"></span></label>
+                    <span>Dark</span>
+                </div>
+            </div>
+        </div>
+        <div class="interaction-panel">
+            <div id="auraOrb" class="aura-orb idle">
+                <canvas id="waveformCanvas"></canvas>
+                <div class="orb-ring orb-ring-1"></div>
+                <div class="orb-ring orb-ring-2"></div>
+                <div class="orb-ring orb-ring-3"></div>
+                <div class="orb-icon">
+                    <svg id="micIcon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+                        <line x1="12" y1="19" x2="12" y2="22"></line>
+                    </svg>
+                    <div id="spinner" class="spinner-border" style="width: 56px; height: 56px; display: none;" role="status"></div>
+                </div>
+            </div>
+            <p id="statusText" class="mt-4 fs-5 text-muted"></p>
+        </div>
+        <audio id="assistantAudio" style="display:none;"></audio>
+    </div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const ui = { auraOrb: document.getElementById("auraOrb"), micIcon: document.getElementById("micIcon"), spinner: document.getElementById("spinner"), statusText: document.getElementById("statusText"), chatHistory: document.getElementById("chatHistory"), audioPlayer: document.getElementById("assistantAudio"), themeToggle: document.getElementById("themeToggle"), waveformCanvas: document.getElementById("waveformCanvas") };
+    const FALLBACK_ERROR_AUDIO = "/static/error_playback.mp3";
+    let mediaRecorder, audioChunks = [], state = 'idle', continueConversation = true, session_id = crypto.randomUUID();
+    let audioContext, analyser, dataArray, source, animationFrameId;
+    const waveformCtx = ui.waveformCanvas.getContext('2d');
+
+    function resizeCanvas() { const rect = ui.auraOrb.getBoundingClientRect(); ui.waveformCanvas.width = rect.width; ui.waveformCanvas.height = rect.height; }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function applyTheme(theme) { document.body.className = theme; ui.themeToggle.checked = (theme === 'dark-mode'); localStorage.setItem('theme', theme); }
+    ui.themeToggle.addEventListener('change', () => applyTheme(ui.themeToggle.checked ? 'dark-mode' : 'light-mode'));
+    applyTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-mode' : 'light-mode'));
+
+    function setUIState(newState) {
+        state = newState;
+        ui.auraOrb.className = `aura-orb ${newState}`;
+        ui.micIcon.style.display = 'none';
+        ui.spinner.style.display = 'none';
+        if (state === 'idle') { ui.micIcon.style.display = 'flex'; ui.statusText.textContent = "Tap to Speak"; stopWaveform(); }
+        else if (state === 'recording') { ui.micIcon.style.display = 'flex'; ui.statusText.textContent = "Listening..."; }
+        else if (state === 'processing') { ui.spinner.style.display = 'flex'; ui.statusText.textContent = "Thinking..."; stopWaveform(); }
+    }
+
+    function addMessage(text, sender) {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "chat-message";
+        const iconUser = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>';
+        const iconAI = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.98 10.99A8.003 8.003 0 0 0 12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8a8.003 8.003 0 0 0 7.98-7.01H12v-2h9.98z"></path></svg>';
+        msgDiv.innerHTML = `<div class="message-icon">${sender === 'user' ? iconUser : iconAI}</div><div class="message-content"><h4>${sender === 'user' ? 'You' : 'Assistant'}</h4><p class="message-text">${text}</p></div>`;
+        ui.chatHistory.appendChild(msgDiv);
+        ui.chatHistory.scrollTop = ui.chatHistory.scrollHeight;
+    }
+
+    function visualize(stream) {
+        if (!audioContext) audioContext = new AudioContext();
+        source = audioContext.createMediaStreamSource(stream);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 2048; // Higher FFT for more detail
+        dataArray = new Float32Array(analyser.frequencyBinCount);
+        source.connect(analyser);
+        drawWaveform();
+    }
+    
+    /* --- ADVANCED ANIMATION: Waveform Drawing Function --- */
+    function drawWaveform() {
+        animationFrameId = requestAnimationFrame(drawWaveform);
+        analyser.getFloatTimeDomainData(dataArray);
+        
+        const { width, height } = ui.waveformCanvas;
+        waveformCtx.clearRect(0, 0, width, height);
+        
+        const centerX = width / 2;
+        const centerY = height / 2;
+        
+        let maxAmplitude = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+            if (Math.abs(dataArray[i]) > maxAmplitude) {
+                maxAmplitude = Math.abs(dataArray[i]);
+            }
+        }
+        
+        const baseRadius = Math.min(width, height) * 0.1;
+        const radiusMultiplier = 1 + (maxAmplitude * 4); // Make visualization more responsive
+        
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        const primaryColor = isDarkMode ? 'rgba(16, 185, 129, 0.7)' : 'rgba(59, 130, 246, 0.7)';
+        const glowColor = isDarkMode ? 'rgba(16, 185, 129, 0.4)' : 'rgba(59, 130, 246, 0.4)';
+
+        waveformCtx.strokeStyle = primaryColor;
+        waveformCtx.lineWidth = 1.5;
+        waveformCtx.shadowBlur = 15; // Added glow effect
+        waveformCtx.shadowColor = glowColor;
+
+        const t = Date.now() / 800; // Slower, more fluid time component
+
+        // Draw multiple layers for a more complex look
+        for(let layer = 1; layer <= 3; layer++) {
+            waveformCtx.beginPath();
+            const layerRadius = baseRadius * layer * 0.7;
+            
+            for (let i = 0; i < 2 * Math.PI; i += 0.02) {
+                const angleOffset = t * (layer % 2 === 0 ? -1 : 1) * 0.5;
+                const dynamicPart = Math.sin((i + angleOffset) * (3 + layer)) + Math.cos((i - angleOffset) * (2 + layer));
+                const r = layerRadius * radiusMultiplier * (1 + 0.2 * dynamicPart);
+                
+                const x = centerX + r * Math.cos(i);
+                const y = centerY + r * Math.sin(i);
+                
+                if (i === 0) { waveformCtx.moveTo(x, y); } else { waveformCtx.lineTo(x, y); }
+            }
+            waveformCtx.closePath();
+            waveformCtx.stroke();
+        }
+    }
+
+
+    function stopWaveform() { 
+        if (animationFrameId) cancelAnimationFrame(animationFrameId); 
+        waveformCtx.clearRect(0, 0, ui.waveformCanvas.width, ui.waveformCanvas.height); 
+    }
+
+    function startRecording() {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            setUIState('recording');
+            visualize(stream);
+            continueConversation = true;
+            mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+            mediaRecorder.onstop = () => { const blob = new Blob(audioChunks, { type: "audio/webm" }); sendToAI(blob); audioChunks = []; stream.getTracks().forEach(t => t.stop()); };
+            mediaRecorder.start();
+        }).catch(err => { addMessage("Microphone access was denied.", "ai"); setUIState('idle'); });
+    }
+    
+    async function sendToAI(audioBlob) {
+        setUIState('processing');
+        const formData = new FormData();
+        formData.append("file", audioBlob, "recording.webm");
+        formData.append("voice_id", "en-US-natalie");
+        try {
+            const response = await fetch(`/agent/chat/${session_id}`, { method: "POST", body: formData });
+            if (!response.ok) { const err = await response.json(); throw new Error(err.detail || `Server error: ${response.status}`); }
+            const result = await response.json();
+            addMessage(result.user_text, "user");
+            addMessage(result.ai_text, "ai");
+            ui.audioPlayer.src = result.audio_url;
+            ui.audioPlayer.play();
+        } catch (err) { continueConversation = false; addMessage(err.message, "ai"); ui.audioPlayer.src = FALLBACK_ERROR_AUDIO; ui.audioPlayer.play(); }
+    }
+    
+    ui.auraOrb.addEventListener("click", () => {
+        if (state === 'idle') startRecording();
+        else if (state === 'recording') mediaRecorder.stop();
+    });
+    
+    ui.audioPlayer.onended = () => { if (continueConversation) startRecording(); else setUIState('idle'); };
+
+    setUIState('idle');
+    addMessage("Welcome. Tap the orb to begin our conversation.", "ai");
+});
+</script>
+</body>
+</html>
