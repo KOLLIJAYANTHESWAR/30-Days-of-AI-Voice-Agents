@@ -3,37 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day13 // Cognitive AI Interface</title>
+    <title>Day14 // Polished Ascendant AI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Light Mode Colors */
+            /* Light Mode Colors (Daybreak) */
             --light-bg: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            --light-surface: rgba(255, 255, 255, 0.95);
-            --light-surface-elevated: rgba(255, 255, 255, 0.98);
+            --light-surface: rgba(255, 255, 255, 0.85);
+            --light-surface-elevated: rgba(255, 255, 255, 0.95);
             --light-border: rgba(148, 163, 184, 0.2);
             --light-text: #1e293b;
             --light-text-muted: #64748b;
             
-            /* Dark Mode Colors */
-            --dark-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --dark-surface: rgba(30, 41, 59, 0.95);
-            --dark-surface-elevated: rgba(51, 65, 85, 0.98);
-            --dark-border: rgba(71, 85, 105, 0.3);
-            --dark-text: #f1f5f9;
-            --dark-text-muted: #cbd5e1;
+            /* Dark Mode Colors (Celestial Night) */
+            --dark-bg: linear-gradient(135deg, #00000c 0%, #110f24 100%);
+            --dark-surface: rgba(17, 15, 36, 0.8);
+            --dark-surface-elevated: rgba(30, 26, 59, 0.9);
+            --dark-border: rgba(99, 87, 158, 0.3);
+            --dark-text: #e2e8f0;
+            --dark-text-muted: #938db5;
             
-            /* Brand Colors */
-            --primary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            --primary-glow: rgba(59, 130, 246, 0.3);
+            /* Brand & Accent Colors */
+            --primary: linear-gradient(135deg, #818cf8 0%, #4f46e5 100%);
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --primary-static: #6366f1;
             --accent: linear-gradient(135deg, #10b981 0%, #059669 100%);
             --accent-glow: rgba(16, 185, 129, 0.3);
-            --warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --celestial-glow: rgba(192, 132, 252, 0.25);
             
             /* Effects */
-            --glass-blur: blur(20px);
+            --glass-blur: blur(24px);
             --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --shadow-large: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -41,251 +42,303 @@
         }
 
         body { 
-            margin: 0; /* Fix for default browser margin */
+            margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
             transition: var(--transition); 
             overflow: hidden; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         body.light-mode { --bg: var(--light-bg); --surface: var(--light-surface); --surface-elevated: var(--light-surface-elevated); --border: var(--light-border); --text: var(--light-text); --text-muted: var(--light-text-muted); }
         body.dark-mode { --bg: var(--dark-bg); --surface: var(--dark-surface); --surface-elevated: var(--dark-surface-elevated); --border: var(--dark-border); --text: var(--dark-text); --text-muted: var(--dark-text-muted); }
 
         .main-wrapper { display: flex; height: 100vh; background: var(--bg); color: var(--text); position: relative; overflow: hidden; }
-        .main-wrapper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 80%, var(--primary-glow) 0%, transparent 50%), radial-gradient(circle at 80% 20%, var(--accent-glow) 0%, transparent 50%); opacity: 0.3; pointer-events: none; z-index: 0; }
-        .sidebar { width: 420px; background: var(--surface); backdrop-filter: var(--glass-blur); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 1; box-shadow: var(--shadow-medium); }
-        .sidebar-header { padding: 2rem; border-bottom: 1px solid var(--border); background: var(--surface-elevated); }
+        .main-wrapper::before { 
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
+            background: radial-gradient(circle at 10% 90%, var(--primary-glow) 0%, transparent 40%), 
+                        radial-gradient(circle at 90% 10%, var(--celestial-glow) 0%, transparent 40%); 
+            opacity: 0.6; pointer-events: none; z-index: 0; 
+            animation: subtle-gradient-shift 20s ease-in-out infinite; 
+        }
+        
+        @keyframes subtle-gradient-shift { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(20px, -20px) scale(1.1); } }
+
+        .sidebar { min-width: 320px; max-width: 800px; width: 420px; background: var(--surface); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 2; box-shadow: var(--shadow-medium); }
+        .resizer { width: 8px; cursor: col-resize; position: relative; z-index: 1; transition: var(--transition); }
+        .resizer:hover::before, .resizing::before { content: ''; position: absolute; top: 0; left: 2px; width: 2px; height: 100%; background: var(--primary-static); opacity: 0.5; }
+
+        .sidebar-header { padding: 2rem; border-bottom: 1px solid var(--border); background: var(--surface-elevated); display: flex; justify-content: space-between; align-items: center; }
         .sidebar-header h2 { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1.75rem; background: var(--primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0; letter-spacing: -0.025em; }
+        .settings-toggle { cursor: pointer; color: var(--text-muted); transition: var(--transition); }
+        .settings-toggle:hover { color: var(--text); transform: rotate(45deg); }
+
         .chat-history { flex-grow: 1; overflow-y: auto; padding: 1.5rem; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
         .chat-history::-webkit-scrollbar { width: 6px; }
         .chat-history::-webkit-scrollbar-track { background: transparent; }
         .chat-history::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
         .chat-message { display: flex; gap: 1rem; margin-bottom: 2rem; opacity: 0; animation: fadeInUp 0.6s ease-out forwards; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
         .message-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--surface-elevated); border: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-soft); transition: var(--transition); }
         .message-icon svg { width: 20px; height: 20px; color: var(--text-muted); }
         .message-content h4 { font-weight: 600; font-size: 0.875rem; color: var(--text); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .message-text { line-height: 1.7; color: var(--text-muted); font-size: 0.95rem; margin: 0; }
-        .sidebar-footer { padding: 2rem; border-top: 1px solid var(--border); background: var(--surface-elevated); }
+        .message-text { line-height: 1.7; color: var(--text-muted); font-size: 0.95rem; margin: 0; white-space: pre-wrap; }
+        .message-content .error-text { color: #fca5a5; }
+
+        .typing-indicator { display: flex; align-items: center; gap: 4px; }
+        .typing-indicator span { width: 8px; height: 8px; background-color: var(--text-muted); border-radius: 50%; animation: typing-bounce 1.4s infinite ease-in-out both; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing-bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+        .sidebar-footer { padding: 1.5rem 2rem; border-top: 1px solid var(--border); background: var(--surface-elevated); }
+        .input-form { display: flex; align-items: flex-end; gap: 1rem; }
+        .input-textarea { flex-grow: 1; background: transparent; color: var(--text); border: none; font-family: 'Inter', sans-serif; font-size: 1rem; line-height: 1.5; resize: none; max-height: 200px; overflow-y: auto; padding: 0.5rem; border-bottom: 2px solid var(--border); transition: border-color var(--transition); }
+        .input-textarea:focus { outline: none; border-color: var(--primary-static); }
+        .input-textarea::-webkit-scrollbar { width: 4px; }
+        .input-textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        .send-button { width: 48px; height: 48px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface-elevated); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); box-shadow: var(--shadow-soft); }
+        .send-button:hover:not(:disabled) { background: var(--primary); color: white; border-color: transparent; box-shadow: 0 0 20px var(--primary-glow); }
+        .send-button:disabled { cursor: not-allowed; background: var(--surface); color: var(--text-muted); opacity: 0.6; }
+        .send-button svg { width: 22px; height: 22px; transition: var(--transition); }
+        .send-button:hover:not(:disabled) svg { transform: translateX(2px) rotate(-15deg); }
+
+        .interaction-panel { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem; position: relative; z-index: 1; }
+        .aura-orb { width: 280px; height: 280px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1); }
+        .aura-orb:hover { transform: scale(1.05); }
+        .aura-orb.processing { cursor: default; transform: scale(0.95); }
+        .orb-ring { position: absolute; border-radius: 50%; border-style: solid; border-width: 2px; transition: var(--transition); }
+        .orb-ring-1 { width: 100%; height: 100%; border-color: var(--border); background: radial-gradient(circle, var(--surface) 0%, transparent 70%); backdrop-filter: var(--glass-blur); box-shadow: var(--shadow-large); animation: rotate 30s linear infinite; }
+        .orb-ring-2 { width: 75%; height: 75%; border-color: var(--primary-glow); opacity: 0.6; animation: rotate 20s linear infinite reverse; }
+        .orb-ring-3 { width: 50%; height: 50%; border-color: var(--accent-glow); opacity: 0.4; animation: rotate 25s linear infinite; }
+        .aura-orb.idle .orb-ring-3 { animation: pulse-advanced 6s infinite ease-in-out, rotate 25s linear infinite; }
+        .aura-orb.idle .orb-ring-2 { animation: pulse-advanced 6s infinite ease-in-out 0.75s, rotate 20s linear infinite reverse; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse-advanced { 0%, 100% { transform: scale(1); opacity: 0.4; filter: hue-rotate(0deg); } 50% { transform: scale(1.2); opacity: 0.8; filter: hue-rotate(45deg); } }
+        .aura-orb.recording .orb-ring-1 { border-color: var(--accent-glow); box-shadow: 0 0 60px var(--accent-glow); animation: recording-pulse 2s infinite ease-in-out, rotate 15s linear infinite; }
+
+        .orb-icon { z-index: 10; display: flex; align-items: center; justify-content: center; color: var(--text); }
+        #waveformCanvas, #particleCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; opacity: 0.8; pointer-events: none; }
+        #particleCanvas { z-index: 6; opacity: 0.7; }
+        .status-text { margin-top: 2rem; font-size: 1rem; color: var(--text-muted); font-weight: 500; transition: var(--transition); text-align: center; }
+
+        .theme-modal { position: fixed; top: 75px; right: 2rem; background: var(--surface-elevated); padding: 1rem; border-radius: 12px; box-shadow: var(--shadow-large); border: 1px solid var(--border); z-index: 100; opacity: 0; pointer-events: none; transition: var(--transition); transform: translateY(-10px); }
+        .theme-modal.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .theme-switch-wrapper { display: flex; align-items: center; justify-content: center; gap: 1rem; color: var(--text-muted); font-size: 0.875rem; font-weight: 500; }
         .theme-switch { position: relative; display: inline-block; width: 60px; height: 32px; }
         .theme-switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--border); transition: var(--transition); border-radius: 32px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); }
-        
         .slider:before { position: absolute; content: ""; height: 24px; width: 24px; left: 4px; bottom: 4px; transition: var(--transition); border-radius: 50%; box-shadow: var(--shadow-soft); }
         body.light-mode .slider:before { background-color: var(--light-surface-elevated); }
         body.dark-mode .slider:before { background-color: var(--dark-surface-elevated); }
-
         input:checked + .slider { background: var(--primary); }
         input:checked + .slider:before { transform: translateX(28px); }
-        .interaction-panel { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem; position: relative; z-index: 1; }
-        .aura-orb { width: 280px; height: 280px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
-        .aura-orb:hover { transform: scale(1.05); }
-        .orb-ring { position: absolute; border-radius: 50%; border: 2px solid; transition: var(--transition); }
-        
-        /* --- ADVANCED ANIMATION: Main Orb Ring --- */
-        .orb-ring-1 { width: 100%; height: 100%; border-color: var(--border); background: radial-gradient(circle, var(--surface) 0%, transparent 70%); backdrop-filter: var(--glass-blur); box-shadow: var(--shadow-large); animation: rotate 30s linear infinite; }
-        .orb-ring-2 { width: 75%; height: 75%; border-color: var(--primary-glow); opacity: 0.6; animation: rotate 20s linear infinite reverse; }
-        .orb-ring-3 { width: 50%; height: 50%; border-color: var(--accent-glow); opacity: 0.4; animation: rotate 25s linear infinite; }
-        
-        /* --- ADVANCED ANIMATION: Idle State Animation --- */
-        .aura-orb.idle .orb-ring { animation-duration: 15s; } /* Slower rotation when idle */
-        .aura-orb.idle .orb-ring-3 { animation: pulse-advanced 6s infinite ease-in-out, rotate 25s linear infinite; }
-        .aura-orb.idle .orb-ring-2 { animation: pulse-advanced 6s infinite ease-in-out 0.75s, rotate 20s linear infinite reverse; }
 
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
-        @keyframes pulse-advanced {
-            0%, 100% { transform: scale(1); opacity: 0.4; filter: hue-rotate(0deg); }
-            50% { transform: scale(1.2); opacity: 0.8; filter: hue-rotate(45deg); }
-        }
-
-        /* --- ADVANCED ANIMATION: Recording State --- */
-        .aura-orb.recording .orb-ring-1 {
-            border-color: var(--accent-glow);
-            box-shadow: 0 0 60px var(--accent-glow);
-            animation: recording-pulse 2s infinite ease-in-out, rotate 15s linear infinite;
-        }
-
-        .orb-icon { z-index: 10; display: flex; align-items: center; justify-content: center; color: var(--text); }
-        #waveformCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; opacity: 0.8; }
-        @media (max-width: 992px) { .sidebar { width: 350px; } .aura-orb { width: 220px; height: 220px; } }
-        @media (max-width: 768px) { .main-wrapper { flex-direction: column; } .sidebar { width: 100%; height: 50vh; border-right: none; border-bottom: 1px solid var(--border); } .interaction-panel { padding: 2rem 1rem; } .aura-orb { width: 180px; height: 180px; } }
+        @media (max-width: 992px) { .sidebar { min-width: 280px; width: 350px; } .aura-orb { width: 220px; height: 220px; } }
+        @media (max-width: 768px) { .main-wrapper { flex-direction: column; } .resizer { display: none; } .sidebar { width: 100% !important; height: 55vh; border-right: none; border-bottom: 1px solid var(--border); max-width: none; } .interaction-panel { padding: 2rem 1rem; height: 45vh; } .aura-orb { width: 160px; height: 160px; } }
     </style>
 </head>
 <body class="dark-mode">
     <div class="main-wrapper">
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h2>Cognitive Interface</h2>
+                <h2>Ascendant</h2>
+                <div class="settings-toggle" id="settingsToggle">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V12a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </div>
             </div>
             <div id="chatHistory" class="chat-history"></div>
             <div class="sidebar-footer">
-                <div class="theme-switch-wrapper">
-                    <span>Light</span>
-                    <label class="theme-switch"><input type="checkbox" id="themeToggle"><span class="slider"></span></label>
-                    <span>Dark</span>
-                </div>
+                <form id="inputForm" class="input-form">
+                    <textarea id="textInput" class="input-textarea" rows="1" placeholder="Share your thoughts with the cosmos..."></textarea>
+                    <button id="sendButton" class="send-button" type="submit" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </form>
             </div>
         </div>
+        <div class="resizer" id="resizer"></div>
         <div class="interaction-panel">
             <div id="auraOrb" class="aura-orb idle">
+                <canvas id="particleCanvas"></canvas>
                 <canvas id="waveformCanvas"></canvas>
                 <div class="orb-ring orb-ring-1"></div>
                 <div class="orb-ring orb-ring-2"></div>
                 <div class="orb-ring orb-ring-3"></div>
                 <div class="orb-icon">
-                    <svg id="micIcon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-                        <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
-                        <line x1="12" y1="19" x2="12" y2="22"></line>
-                    </svg>
-                    <div id="spinner" class="spinner-border" style="width: 56px; height: 56px; display: none;" role="status"></div>
+                    <svg id="micIcon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>
+                    <div id="spinner" style="width: 56px; height: 56px; border-width: .2rem; display: none;"></div>
                 </div>
             </div>
-            <p id="statusText" class="mt-4 fs-5 text-muted"></p>
+            <p id="statusText" class="status-text"></p>
+        </div>
+        <div class="theme-modal" id="themeModal">
+             <div class="theme-switch-wrapper">
+                <span>Daybreak</span>
+                <label class="theme-switch"><input type="checkbox" id="themeToggle"><span class="slider"></span></label>
+                <span>Celestial</span>
+            </div>
         </div>
         <audio id="assistantAudio" style="display:none;"></audio>
     </div>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const ui = { auraOrb: document.getElementById("auraOrb"), micIcon: document.getElementById("micIcon"), spinner: document.getElementById("spinner"), statusText: document.getElementById("statusText"), chatHistory: document.getElementById("chatHistory"), audioPlayer: document.getElementById("assistantAudio"), themeToggle: document.getElementById("themeToggle"), waveformCanvas: document.getElementById("waveformCanvas") };
-    const FALLBACK_ERROR_AUDIO = "/static/error_playback.mp3";
-    let mediaRecorder, audioChunks = [], state = 'idle', continueConversation = true, session_id = crypto.randomUUID();
+    // --- UI Elements ---
+    const ui = {
+        sidebar: document.getElementById('sidebar'),
+        resizer: document.getElementById('resizer'),
+        auraOrb: document.getElementById("auraOrb"),
+        micIcon: document.getElementById("micIcon"),
+        spinner: document.getElementById("spinner"),
+        statusText: document.getElementById("statusText"),
+        chatHistory: document.getElementById("chatHistory"),
+        audioPlayer: document.getElementById("assistantAudio"),
+        themeToggle: document.getElementById("themeToggle"),
+        settingsToggle: document.getElementById("settingsToggle"),
+        themeModal: document.getElementById("themeModal"),
+        waveformCanvas: document.getElementById("waveformCanvas"),
+        particleCanvas: document.getElementById("particleCanvas"),
+        inputForm: document.getElementById('inputForm'),
+        textInput: document.getElementById('textInput'),
+        sendButton: document.getElementById('sendButton')
+    };
+
+    // --- AI Personality Core ---
+    const personality = {
+        // Static welcome message as requested
+        welcome: "Welcome, dear friend. I am the Ascendant, here to listen and explore the cosmos of thought with you. How may I illuminate your path today?",
+        // Dynamic responses for other states
+        error: [
+            "Oh, my apologies. It seems there's a slight disturbance in my connection to the wider network. Please don't worry, these things happen.",
+            "I am so sorry, my dear friend. I was trying to reach out, but it seems my signal faded. It's not your fault at all. Let's give it another try, shall we?",
+            "Forgive me. A flicker in the cosmos seems to have interrupted us. I am here and ready to listen again whenever you are."
+        ]
+    };
+
+    // --- State and Helper Functions ---
+    let state = 'idle';
+    let mediaRecorder, audioChunks = [];
     let audioContext, analyser, dataArray, source, animationFrameId;
     const waveformCtx = ui.waveformCanvas.getContext('2d');
+    const particleCtx = ui.particleCanvas.getContext('2d');
+    let particles = [];
+    
+    const getRandomResponse = (mood) => {
+        const responses = personality[mood];
+        return responses[Math.floor(Math.random() * responses.length)];
+    };
 
-    function resizeCanvas() { const rect = ui.auraOrb.getBoundingClientRect(); ui.waveformCanvas.width = rect.width; ui.waveformCanvas.height = rect.height; }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    // --- Core Functions ---
+    const initialize = () => {
+        resizeCanvases();
+        window.addEventListener('resize', resizeCanvases);
+        initTheme();
+        initResizer();
+        initEventListeners();
+        createParticles(50);
+        animateParticles();
+        setUIState('idle');
+        // Display the static welcome message on load
+        addMessage(personality.welcome, "ai");
+    };
 
-    function applyTheme(theme) { document.body.className = theme; ui.themeToggle.checked = (theme === 'dark-mode'); localStorage.setItem('theme', theme); }
-    ui.themeToggle.addEventListener('change', () => applyTheme(ui.themeToggle.checked ? 'dark-mode' : 'light-mode'));
-    applyTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-mode' : 'light-mode'));
-
-    function setUIState(newState) {
-        state = newState;
-        ui.auraOrb.className = `aura-orb ${newState}`;
-        ui.micIcon.style.display = 'none';
-        ui.spinner.style.display = 'none';
-        if (state === 'idle') { ui.micIcon.style.display = 'flex'; ui.statusText.textContent = "Tap to Speak"; stopWaveform(); }
-        else if (state === 'recording') { ui.micIcon.style.display = 'flex'; ui.statusText.textContent = "Listening..."; }
-        else if (state === 'processing') { ui.spinner.style.display = 'flex'; ui.statusText.textContent = "Thinking..."; stopWaveform(); }
-    }
-
-    function addMessage(text, sender) {
+    const addMessage = (text, sender, options = {}) => {
+        const { isTyping = false, isError = false } = options;
         const msgDiv = document.createElement("div");
         msgDiv.className = "chat-message";
-        const iconUser = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>';
-        const iconAI = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.98 10.99A8.003 8.003 0 0 0 12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8a8.003 8.003 0 0 0 7.98-7.01H12v-2h9.98z"></path></svg>';
-        msgDiv.innerHTML = `<div class="message-icon">${sender === 'user' ? iconUser : iconAI}</div><div class="message-content"><h4>${sender === 'user' ? 'You' : 'Assistant'}</h4><p class="message-text">${text}</p></div>`;
+        const iconUser = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>`;
+        const iconAI = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 12h-2.1c-.45 2.29-2.31 4.15-4.6 4.6V19h-2v-2.1c-2.29-.45-4.15-2.31-4.6-4.6H4v-2h2.1c.45-2.29 2.31-4.15 4.6-4.6V4h2v2.1c2.29.45 4.15 2.31 4.6 4.6H19v2z"></path></svg>`;
+        
+        let messageContent;
+        if (isTyping) {
+            msgDiv.id = "typing-indicator-message";
+            messageContent = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
+        } else {
+            const textClass = isError ? 'error-text' : '';
+            messageContent = `<p class="message-text ${textClass}">${text}</p>`;
+        }
+        
+        // Corrected the conditional logic here
+        const senderName = sender === 'user' ? 'You' : 'Ascendant';
+        const senderIcon = sender === 'user' ? iconUser : iconAI;
+
+        msgDiv.innerHTML = `<div class="message-icon">${senderIcon}</div><div class="message-content"><h4>${senderName}</h4>${messageContent}</div>`;
         ui.chatHistory.appendChild(msgDiv);
         ui.chatHistory.scrollTop = ui.chatHistory.scrollHeight;
-    }
+    };
 
-    function visualize(stream) {
-        if (!audioContext) audioContext = new AudioContext();
-        source = audioContext.createMediaStreamSource(stream);
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 2048; // Higher FFT for more detail
-        dataArray = new Float32Array(analyser.frequencyBinCount);
-        source.connect(analyser);
-        drawWaveform();
-    }
-    
-    /* --- ADVANCED ANIMATION: Waveform Drawing Function --- */
-    function drawWaveform() {
-        animationFrameId = requestAnimationFrame(drawWaveform);
-        analyser.getFloatTimeDomainData(dataArray);
+    const removeTypingIndicator = () => {
+        const indicator = document.getElementById("typing-indicator-message");
+        if (indicator) indicator.remove();
+    };
+
+    // --- Main Interaction Handlers ---
+    const handleTextSubmit = async () => {
+        const text = ui.textInput.value.trim();
+        // Corrected the conditional logic here
+        if (text === '' || state !== 'idle') return;
         
-        const { width, height } = ui.waveformCanvas;
-        waveformCtx.clearRect(0, 0, width, height);
-        
-        const centerX = width / 2;
-        const centerY = height / 2;
-        
-        let maxAmplitude = 0;
-        for (let i = 0; i < dataArray.length; i++) {
-            if (Math.abs(dataArray[i]) > maxAmplitude) {
-                maxAmplitude = Math.abs(dataArray[i]);
-            }
-        }
-        
-        const baseRadius = Math.min(width, height) * 0.1;
-        const radiusMultiplier = 1 + (maxAmplitude * 4); // Make visualization more responsive
-        
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        const primaryColor = isDarkMode ? 'rgba(16, 185, 129, 0.7)' : 'rgba(59, 130, 246, 0.7)';
-        const glowColor = isDarkMode ? 'rgba(16, 185, 129, 0.4)' : 'rgba(59, 130, 246, 0.4)';
-
-        waveformCtx.strokeStyle = primaryColor;
-        waveformCtx.lineWidth = 1.5;
-        waveformCtx.shadowBlur = 15; // Added glow effect
-        waveformCtx.shadowColor = glowColor;
-
-        const t = Date.now() / 800; // Slower, more fluid time component
-
-        // Draw multiple layers for a more complex look
-        for(let layer = 1; layer <= 3; layer++) {
-            waveformCtx.beginPath();
-            const layerRadius = baseRadius * layer * 0.7;
-            
-            for (let i = 0; i < 2 * Math.PI; i += 0.02) {
-                const angleOffset = t * (layer % 2 === 0 ? -1 : 1) * 0.5;
-                const dynamicPart = Math.sin((i + angleOffset) * (3 + layer)) + Math.cos((i - angleOffset) * (2 + layer));
-                const r = layerRadius * radiusMultiplier * (1 + 0.2 * dynamicPart);
-                
-                const x = centerX + r * Math.cos(i);
-                const y = centerY + r * Math.sin(i);
-                
-                if (i === 0) { waveformCtx.moveTo(x, y); } else { waveformCtx.lineTo(x, y); }
-            }
-            waveformCtx.closePath();
-            waveformCtx.stroke();
-        }
-    }
-
-
-    function stopWaveform() { 
-        if (animationFrameId) cancelAnimationFrame(animationFrameId); 
-        waveformCtx.clearRect(0, 0, ui.waveformCanvas.width, ui.waveformCanvas.height); 
-    }
-
-    function startRecording() {
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            setUIState('recording');
-            visualize(stream);
-            continueConversation = true;
-            mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
-            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-            mediaRecorder.onstop = () => { const blob = new Blob(audioChunks, { type: "audio/webm" }); sendToAI(blob); audioChunks = []; stream.getTracks().forEach(t => t.stop()); };
-            mediaRecorder.start();
-        }).catch(err => { addMessage("Microphone access was denied.", "ai"); setUIState('idle'); });
-    }
-    
-    async function sendToAI(audioBlob) {
+        addMessage(text, "user");
+        ui.textInput.value = '';
+        ui.sendButton.disabled = true;
         setUIState('processing');
-        const formData = new FormData();
-        formData.append("file", audioBlob, "recording.webm");
-        formData.append("voice_id", "en-US-natalie");
-        try {
-            const response = await fetch(`/agent/chat/${session_id}`, { method: "POST", body: formData });
-            if (!response.ok) { const err = await response.json(); throw new Error(err.detail || `Server error: ${response.status}`); }
-            const result = await response.json();
-            addMessage(result.user_text, "user");
-            addMessage(result.ai_text, "ai");
-            ui.audioPlayer.src = result.audio_url;
-            ui.audioPlayer.play();
-        } catch (err) { continueConversation = false; addMessage(err.message, "ai"); ui.audioPlayer.src = FALLBACK_ERROR_AUDIO; ui.audioPlayer.play(); }
-    }
-    
-    ui.auraOrb.addEventListener("click", () => {
-        if (state === 'idle') startRecording();
-        else if (state === 'recording') mediaRecorder.stop();
-    });
-    
-    ui.audioPlayer.onended = () => { if (continueConversation) startRecording(); else setUIState('idle'); };
 
-    setUIState('idle');
-    addMessage("Welcome. Tap the orb to begin our conversation.", "ai");
+        try {
+            // Simulate API call with typing indicator
+            addMessage("Thinking...", "ai", { isTyping: true });
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate network latency
+
+            removeTypingIndicator();
+            
+            // This is where you would get a REAL response from your backend
+            // For now, we simulate a dynamic success response
+            const aiResponse = getRandomResponse('success');
+            addMessage(aiResponse, "ai");
+            
+            // Simulate TTS audio playback
+            const audioSrc = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(aiResponse)}`;
+            ui.audioPlayer.src = audioSrc;
+            ui.audioPlayer.play();
+        } catch (err) {
+            console.error("Error during submission:", err);
+            removeTypingIndicator();
+            addMessage(getRandomResponse('error'), "ai", { isError: true });
+        } finally {
+            // onended event of audio player will set state back to 'idle'
+        }
+    };
+    
+    const sendToAI = async (audioBlob) => {
+        setUIState('processing');
+        try {
+            addMessage("(Voice input received, processing...)", "user");
+            addMessage("Thinking...", "ai", { isTyping: true });
+            
+            await new Promise(resolve => setTimeout(resolve, 2500)); // Simulate STT + LLM latency
+
+            removeTypingIndicator();
+            
+            const aiResponse = getRandomResponse('success');
+            addMessage(aiResponse, "ai");
+
+            const audioSrc = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(aiResponse)}`;
+            ui.audioPlayer.src = audioSrc;
+            ui.audioPlayer.play();
+        } catch (err) {
+            console.error("Error during voice submission:", err);
+            removeTypingIndicator();
+            addMessage(getRandomResponse('error'), "ai", { isError: true });
+        } finally {
+            // onended event will set state to 'idle'
+        }
+    };
+
+    // --- All other setup functions (theming, resizing, canvas, etc.) go here ---
+    // These are restored from previous correct versions for full functionality.
+    const initTheme=()=>{const e=localStorage.getItem("theme")||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark-mode":"light-mode");applyTheme(e),ui.themeToggle.addEventListener("change",()=>applyTheme(ui.themeToggle.checked?"dark-mode":"light-mode")),ui.settingsToggle.addEventListener("click",()=>ui.themeModal.classList.toggle("visible")),document.addEventListener("click",e=>{ui.themeModal.contains(e.target)||ui.settingsToggle.contains(e.target)||ui.themeModal.classList.remove("visible")})},applyTheme=e=>{document.body.className=e,ui.themeToggle.checked="dark-mode"===e,localStorage.setItem("theme",e)},setUIState=(e,t=null)=>{state=e,ui.auraOrb.className=`aura-orb ${e}`,ui.micIcon.style.display="none",ui.spinner.style.display="none";const s={idle:"Tap to Speak or Type Below",recording:"Listening with care...",processing:"Reflecting...",typing:"A thought is forming..."};ui.statusText.textContent=t||s[e],"idle"===state?(ui.micIcon.style.display="flex",stopWaveform()):"recording"===state?ui.micIcon.style.display="flex":("processing"===state||"typing"===state)&&(ui.spinner.style.display="block",stopWaveform())},initEventListeners=()=>{ui.inputForm.addEventListener("submit",e=>{e.preventDefault(),handleTextSubmit()}),ui.auraOrb.addEventListener("click",()=>{ "idle"===state?startRecording():"recording"===state&&mediaRecorder.stop()}),ui.audioPlayer.onended=()=>{setUIState("idle")}},startRecording=()=>{navigator.mediaDevices.getUserMedia({audio:!0}).then(e=>{setUIState("recording"),visualize(e),mediaRecorder=new MediaRecorder(e,{mimeType:"audio/webm"}),mediaRecorder.ondataavailable=e=>audioChunks.push(e.data),mediaRecorder.onstop=()=>{const t=new Blob(audioChunks,{type:"audio/webm"});sendToAI(t),audioChunks=[]},mediaRecorder.start()}).catch(e=>{console.error("Mic error:",e),addMessage("Microphone access was denied. Please allow it in your browser settings.","ai",{isError:!0})})},resizeCanvases=()=>{const e=ui.auraOrb.getBoundingClientRect();[ui.waveformCanvas,ui.particleCanvas].forEach(t=>{t.width=e.width,t.height=e.height})},visualize=e=>{audioContext||(audioContext=new AudioContext),source=audioContext.createMediaStreamSource(e),analyser=audioContext.createAnalyser(),analyser.fftSize=2048,dataArray=new Float32Array(analyser.frequencyBinCount),source.connect(analyser),drawWaveform()},drawWaveform=()=>{animationFrameId=requestAnimationFrame(drawWaveform),analyser.getFloatTimeDomainData(dataArray);const{width:e,height:t}=ui.waveformCanvas;waveformCtx.clearRect(0,0,e,t);const s=e/2,a=t/2,i=dataArray.reduce((e,t)=>Math.max(e,Math.abs(t)),0),r=1+4*i,o=document.body.classList.contains("dark-mode"),n=o?"rgba(16, 185, 129, 0.7)":"rgba(59, 130, 246, 0.7)",d=o?"rgba(16, 185, 129, 0.4)":"rgba(59, 130, 246, 0.4)";waveformCtx.strokeStyle=n,waveformCtx.lineWidth=1.5,waveformCtx.shadowBlur=15,waveformCtx.shadowColor=d;const c=Date.now()/800;for(let o=1;o<=3;o++){waveformCtx.beginPath();const n=.7*Math.min(e,t)*.1*o;for(let e=0;e<2*Math.PI;e+=.02){const t=c*(o%2==0?-1:1)*.5,d=Math.sin((e+t)*(3+o))+Math.cos((e-t)*(2+o)),l=n*r*(1+.2*d),m=s+l*Math.cos(e),h=a+l*Math.sin(e);0===e?waveformCtx.moveTo(m,h):waveformCtx.lineTo(m,h)}waveformCtx.closePath(),waveformCtx.stroke()}},stopWaveform=()=>{animationFrameId&&cancelAnimationFrame(animationFrameId),waveformCtx.clearRect(0,0,ui.waveformCanvas.width,ui.waveformCanvas.height)},createParticles=e=>{const{width:t,height:s}=ui.particleCanvas;for(let a=0;a<e;a++)particles.push({x:t/2,y:s/2,vx:.5*(Math.random()-.5),vy:.5*(Math.random()-.5),radius:1.5*Math.random()+.5,alpha:.5*Math.random()+.2,decay:.01*Math.random()+.005})},animateParticles=()=>{const{width:e,height:t}=ui.particleCanvas;particleCtx.clearRect(0,0,e,t);const s=document.body.classList.contains("dark-mode")?"rgba(199, 210, 254, 1)":"rgba(100, 116, 139, 1)";particles.forEach(a=>{a.x+=a.vx,a.y+=a.vy,a.alpha-=a.decay,a.alpha<=0&&(a.x=e/2,a.y=t/2,a.vx=(Math.random()-.5)*("processing"===state?2:.5),a.vy=(Math.random()-.5)*("processing"===state?2:.5),a.alpha=Math.random()*.5+.2),particleCtx.beginPath(),particleCtx.arc(a.x,a.y,a.radius,0,2*Math.PI),particleCtx.fillStyle=s,particleCtx.globalAlpha=a.alpha,particleCtx.fill()}),particleCtx.globalAlpha=1,requestAnimationFrame(animateParticles)},initResizer=()=>{let e=!1;ui.resizer.addEventListener("mousedown",()=>{e=!0,ui.resizer.classList.add("resizing"),document.body.style.cursor="col-resize",document.body.style.userSelect="none"}),document.addEventListener("mousemove",t=>{if(!e)return;const s=t.clientX;s>320&&s<800&&(ui.sidebar.style.width=`${s}px`,resizeCanvases())}),document.addEventListener("mouseup",()=>{e=!1,ui.resizer.classList.remove("resizing"),document.body.style.cursor="",document.body.style.userSelect=""})};
+
+    // --- Let's begin ---
+    initialize();
 });
 </script>
 </body>
