@@ -3,7 +3,7 @@ import os
 from typing import Any, Dict, List
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, File, Form, HTTPException, Path, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Path, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -55,8 +55,8 @@ chat_histories: Dict[str, List[Dict[str, Any]]] = {}
 # --- FastAPI App ---
 app = FastAPI(
     title="AI Voice Agent Backend",
-    description="Refactored backend for Day 14",
-    version="3.0.0"
+    description="Refactored backend for Day 14 + Day 15 WebSocket",
+    version="3.1.0"
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -111,3 +111,17 @@ async def conversational_chat(
         raise HTTPException(status_code=500, detail=str(e))
 
     return ChatResponse(audio_url=audio_url, user_text=user_text, ai_text=ai_text)
+
+# --- WebSocket Echo Endpoint (Day 15) ---
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    logger.info("WebSocket: client connected")
+    await websocket.send_text("👋 Connected to WebSocket echo server. Send me something!")
+    try:
+        while True:
+            data = await websocket.receive_text()
+            logger.info(f"WebSocket received: {data}")
+            await websocket.send_text(f"Echo: {data}")
+    except WebSocketDisconnect:
+        logger.info("WebSocket: client disconnected")
