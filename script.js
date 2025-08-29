@@ -196,7 +196,8 @@ function playMurfBase64Audio(b64, text = null) {
 // ================= WebSocket =================
 function initWebSocket() {
   return new Promise((resolve, reject) => {
-    ws = new WebSocket(`ws://127.0.0.1:8000/ws?session=${sessionId}`);
+    ws = new WebSocket(`wss://ai-voice-agent-p7ct.onrender.com/ws?session=${sessionId}`);
+
 
     ws.onopen = () => {
       console.log("✅ WebSocket connected");
@@ -290,11 +291,13 @@ async function startRecording() {
   const gemini = localStorage.getItem("GEMINI_API_KEY");
   const murf = localStorage.getItem("MURF_API_KEY");
   const assembly = localStorage.getItem("ASSEMBLYAI_API_KEY");
-
-  if (!gemini || !murf || !assembly || !openWeather || !tavily) {
+const openWeather = localStorage.getItem("OPENWEATHER_API_KEY");
+const tavily = localStorage.getItem("TAVILY_API_KEY");
+if (!gemini || !murf || !assembly || !openWeather || !tavily) {
     alert("Please provide all API keys before recording!");
     return;
-  }
+}
+
 
   try {
     await initWebSocket();
