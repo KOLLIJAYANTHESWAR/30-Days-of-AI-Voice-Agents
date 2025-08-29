@@ -93,8 +93,8 @@ function injectSettingsUI() {
     };
 
     // Mandatory check
-    if (!keys.GEMINI_API_KEY || !keys.MURF_API_KEY || !keys.ASSEMBLYAI_API_KEY) {
-      alert("Please fill in Gemini, Murf, and AssemblyAI API keys before saving!");
+    if (!keys.GEMINI_API_KEY || !keys.MURF_API_KEY || !keys.ASSEMBLYAI_API_KEY || !keys.OPENWEATHER_API_KEY || !keys.TAVILY_API_KEY) {
+      alert("Please fill in all API keys before saving!");
       return;
     }
 
@@ -291,8 +291,8 @@ async function startRecording() {
   const murf = localStorage.getItem("MURF_API_KEY");
   const assembly = localStorage.getItem("ASSEMBLYAI_API_KEY");
 
-  if (!gemini || !murf || !assembly) {
-    alert("Please provide Gemini, Murf, and AssemblyAI API keys before recording!");
+  if (!gemini || !murf || !assembly || !openWeather || !tavily) {
+    alert("Please provide all API keys before recording!");
     return;
   }
 
