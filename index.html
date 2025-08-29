@@ -21,16 +21,28 @@
     <div class="voice-agent">
       <h3>Voice Agent</h3>
 
-      <div class="chat-log" id="chatLog">
+      <!-- Persona Selector -->
+      <div class="controls">
+        <label for="personaSelect">Persona:</label>
+        <select id="personaSelect">
+          <option value="friend" selected>Friend</option>
+          <!--<option value="funny">Funny</option>-->
+          <!--<option value="teacher">Teacher</option>-->
+        </select>
+      </div>
+
+      <!-- Chat log -->
+      <div class="chat-log" id="chat-log">
         <div class="message received">
           <span>Press "Start Recording" to begin.</span>
         </div>
         <div id="transcription-box" class="message final-transcription"></div>
       </div>
 
+      <!-- Controls -->
       <div class="controls">
         <button id="startAndstopBtn">Start Recording</button>
-        <div class="loading" id="loading">
+        <div class="loading" id="loading" style="display: none;">
           <div class="loading-dots">
             <div class="dot"></div>
             <div class="dot"></div>
@@ -38,9 +50,11 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
+  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
