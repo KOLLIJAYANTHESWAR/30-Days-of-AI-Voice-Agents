@@ -1,145 +1,240 @@
-🎙️ AI Voice Conversational Agent (FastAPI):
-An advanced real-time AI-powered voice assistant that transcribes your speech, generates intelligent and context-aware responses using Google Gemini, and speaks back to you with natural-sounding voices using Murf AI. Built with FastAPI, it supports session-based conversations, multiple voice selections, and a modern, interactive UI.
+# 🎙️ AI Voice Conversational Agent
 
-✨ Features:
---> Speech-to-Text – Accurate transcription using AssemblyAI.
---> AI Response Generation – Context-aware replies from Google Gemini.
---> Text-to-Speech – Lifelike voice synthesis via Murf AI.
---> Session-based Conversation Memory – Maintains dialogue history per user.
---> Modern UI – Dark/Light theme toggle, animated aura orb, live waveform visualization.
---> Fast & Async – Built on FastAPI with async calls for low latency.
---> Modular Design – Easily replace APIs or extend features.
+A Real-Time AI-Powered Voice Assistant built using **FastAPI, AssemblyAI, Google Gemini, and Murf AI**.
 
-🏗 Architecture:
-🎤 User Speech
-      ↓
-[Frontend UI]
-      ↓ (audio file)
-[FastAPI Backend]
-      ↓
-AssemblyAI (Speech-to-Text)
-      ↓
-Google Gemini (AI Chat Generation)
-      ↓
-Murf AI (Text-to-Speech)
-      ↓ (audio URL)
-[Frontend UI - Plays AI Voice Response]
+This system enables natural voice conversations by converting speech to text, generating intelligent responses, and converting them back into realistic AI speech with session-based memory.
 
+---
 
-🏗 Architecture Diagram:
-           ┌──────────────────────────┐
-           │        User Device        │
-           │   (Browser Frontend UI)   │
-           └───────────┬──────────────┘
-                       │ Audio (file)
-                       ▼
-          ┌────────────────────────────┐
-          │        FastAPI Backend      │
-          │   (app.py / main.py)        │
-          └───────┬───────────┬────────┘
-                  │           │
-                  ▼           ▼
-       ┌────────────────┐  ┌─────────────────┐
-       │  AssemblyAI     │  │ Google Gemini   │
-       │ (Speech-to-Text)│  │ (AI Response)   │
-       └───────┬─────────┘  └──────────┬─────┘
-               │                        │
-               ▼                        │
-       ┌────────────────────────────────┘
-       │
-       ▼
-  ┌───────────────┐
-  │   Murf AI      │
-  │ (Text-to-Speech│
-  └───────┬────────┘
-          │ Audio URL
-          ▼
-   ┌───────────────────────┐
-   │ Browser Plays Response │
-   └───────────────────────┘
+## 📌 Project Overview
 
+AI Voice Conversational Agent is a backend-driven voice assistant designed to:
 
-🛠 Tech Stack:
-Backend: FastAPI, Python 3.11+
-Frontend: HTML, CSS, JavaScript
-APIs: AssemblyAI, Google Gemini, Murf AI
-Tools & Libraries:
-httpx – Async HTTP requests
-pydantic & pydantic-settings – Config validation
-python-dotenv – Environment variable management
-logging – Structured logging
+- Convert user speech into text
+- Generate intelligent AI responses
+- Convert AI text responses into natural voice
+- Maintain session-based conversation memory
+- Provide a modern interactive frontend UI
 
+---
 
-📦 Installation:
-1️⃣ Clone the Repository:
-git clone https://github.com/your-username/ai-voice-agent.git
-cd ai-voice-agent
+## 🏗️ Architecture
 
-2️⃣ Create & Activate Virtual Environment
-python -m venv venv
-source venv/bin/activate  # Mac/Linux
-venv\Scripts\activate     # Windows
+```
+User Voice → Frontend UI → FastAPI Backend
+                        ↓
+                 AssemblyAI (Speech-to-Text)
+                        ↓
+                 Google Gemini (AI Response)
+                        ↓
+                 Murf AI (Text-to-Speech)
+                        ↓
+                Audio Response to User
+```
 
-3️⃣ Install Dependencies
-pip install -r requirements.txt
+---
 
-4️⃣ Set Up Environment Variables
-Create a .env file in the root directory:
+## 🛠️ Tech Stack
 
-MURF_API_KEY=your_murf_api_key
-ASSEMBLYAI_API_KEY=your_assemblyai_api_key
-GEMINI_API_KEY=your_gemini_api_key
+- **Backend:** FastAPI (Python 3.11+)
+- **Async Client:** httpx
+- **Frontend:** HTML, CSS, JavaScript
+- **Speech-to-Text:** AssemblyAI
+- **AI Engine:** Google Gemini
+- **Text-to-Speech:** Murf AI
+- **Configuration:** pydantic, python-dotenv
+- **Logging:** Python logging module
 
-5️⃣ Run the Backend
-uvicorn main:app --reload
+---
 
-Backend will be available at:
-➡ http://127.0.0.1:8000
+## 📦 Features
 
-📡 API Endpoints
-GET /
-Serves the frontend UI (static/index.html).
-POST /agent/chat/{session_id}
-Handles speech-to-text, AI generation, and text-to-speech.
+### ✅ Speech-to-Text
+- Accurate audio transcription
+- Async processing
+- Handles uploaded audio files
 
-Request:
-Path Parameter: session_id – unique ID for each conversation.
+### ✅ AI Response Generation
+- Context-aware replies
+- Session-based memory
+- Structured JSON responses
 
-Form Data:
-file – Audio file (required)
+### ✅ Text-to-Speech
+- Natural voice synthesis
+- Multiple voice selection support
+- Returns playable audio URL
 
-voice_id – Murf AI voice ID (optional, default "en-US-natalie")
-Response (JSON):
+### ✅ Session Management
+- Unique `session_id` per user
+- Conversation history tracking
+- Isolated memory per session
+
+### ✅ Modern UI
+- Dark / Light theme toggle
+- Animated aura orb
+- Live waveform visualization
+- Interactive chat interface
+
+---
+
+## 📡 API Endpoints
+
+### `GET /`
+
+Serves the frontend UI.
+
+---
+
+### `POST /agent/chat/{session_id}`
+
+Handles:
+
+- Speech-to-Text
+- AI response generation
+- Text-to-Speech
+
+#### Path Parameter
+
+- `session_id` – Unique ID for conversation tracking
+
+#### Form Data
+
+- `file` – Audio file (required)
+- `voice_id` – Murf voice ID (optional, default: `en-US-natalie`)
+
+#### Sample Response
+
+```json
 {
   "audio_url": "https://murf.ai/output/xyz123.mp3",
   "user_text": "Hello there!",
   "ai_text": "Hi! How can I assist you today?"
 }
+```
 
-🎯 Usage Flow:
-User records voice → Frontend sends to /agent/chat/{session_id}.
-Backend transcribes via AssemblyAI.
-Google Gemini generates AI response.
-Murf AI turns text into audio.
-Frontend plays AI’s voice response.
+---
 
-📌 Example .env Configuration:
-MURF_API_KEY=xxxxxxxxxxxxxxxxxxxx
-ASSEMBLYAI_API_KEY=xxxxxxxxxxxxxxxxxxxx
-GEMINI_API_KEY=xxxxxxxxxxxxxxxxxxxx
+## 🗂️ Project Structure
 
-🔮 Future Enhancements:
-🎧 Real-time streaming transcription & response
-🌍 Multi-language support
-🗂 Save conversation history to a database
-📱 Mobile-friendly PWA version
+```
+ai-voice-agent/
+│
+├── main.py
+├── services/
+│   ├── assemblyai_service.py
+│   ├── gemini_service.py
+│   └── murf_service.py
+│
+├── static/
+│   └── index.html
+│
+├── .env
+├── requirements.txt
+└── README.md
+```
 
-🤝 Contributing:
-Fork this repository
-Create your feature branch (git checkout -b feature/my-feature)
-Commit changes (git commit -m 'Add my feature')
-Push to branch (git push origin feature/my-feature)
-Create Pull Request
+---
 
-📜 License:
-MIT License – free to use and modify.
+## ⚙️ Configuration
+
+Application uses environment-based configuration.
+
+Create a `.env` file in the project root:
+
+```
+MURF_API_KEY=your_murf_api_key
+ASSEMBLYAI_API_KEY=your_assemblyai_api_key
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+---
+
+## 🚀 Running Locally
+
+### 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/ai-voice-agent.git
+cd ai-voice-agent
+```
+
+### 2️⃣ Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+Activate:
+
+Mac/Linux:
+```bash
+source venv/bin/activate
+```
+
+Windows:
+```bash
+venv\Scripts\activate
+```
+
+### 3️⃣ Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4️⃣ Run Application
+
+```bash
+uvicorn main:app --reload
+```
+
+Server runs at:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## 🔄 Usage Flow
+
+1. User records voice in browser
+2. Audio is sent to `/agent/chat/{session_id}`
+3. Backend transcribes speech
+4. AI generates contextual response
+5. Response is converted to speech
+6. Frontend plays AI voice output
+
+---
+
+## 🔒 Security Highlights
+
+- API keys stored securely via environment variables
+- Async request handling
+- Session isolation
+- Structured logging
+
+---
+
+## 📈 Future Improvements
+
+- Real-time streaming responses
+- Multi-language support
+- Database-backed conversation storage
+- Docker support
+- CI/CD pipeline
+- Swagger documentation
+
+---
+
+## 👨‍💻 Author
+
+**Kolli Jayanth Eswar**
+
+AI & Backend Developer | FastAPI | Intelligent Systems
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
